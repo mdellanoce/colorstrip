@@ -9,6 +9,15 @@
     '#8D38C9',
     '#000000'
   ];
+  
+  function blend(from, to, alpha) {
+    alpha = Math.min(1, Math.max(alpha, 0));
+    return from*alpha + to*(1-alpha);
+  };
+  
+  function alpha(range, x) {
+    return 0.5*Math.sin((Math.PI/range)*(x+range/2))+0.5;
+  };
 
   function ColorStrip(element) {
     this.element = element;
@@ -44,20 +53,15 @@
         var r = pixels.data[i];
         var g = pixels.data[i+1];
         var b = pixels.data[i+2];
-        var saturation = this._value(height, y);
+        var a = alpha(height, y);
 
-        pixels.data[i] = Math.max(r, saturation);
-        pixels.data[i+1] = Math.max(g, saturation);
-        pixels.data[i+2] = Math.max(b, saturation);
+        pixels.data[i] = blend(r, 255, a);
+        pixels.data[i+1] = blend(g, 255, a);
+        pixels.data[i+2] = blend(b, 255, a);
       }
     }
 
     this.context.putImageData(pixels, 0, 0);
-  };
-
-  ColorStrip.prototype._value = function(height, x) {
-    var color = 127*Math.sin((Math.PI/height)*(x+height/2)) + 128;
-    return Math.round(color);
   };
 
   $.fn.extend({
