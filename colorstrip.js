@@ -1,22 +1,29 @@
 (function($) {
-  var colors = [
-    '#FF0000',
-    '#FFA500',
-    '#FFFF00',
-    '#00FF00',
-    '#0000FF',
-    '#2E0854',
-    '#8D38C9',
-    '#000000'
-  ];
-  
-  function blend(from, to, alpha) {
-    alpha = Math.min(1, Math.max(alpha, 0));
-    return from*alpha + to*(1-alpha);
-  };
-  
-  function alpha(range, x) {
-    return 0.5*Math.sin((Math.PI/range)*(x+range/2))+0.5;
+  function hslToRgb(hsl) {
+    var h = hsl[0],
+      s = hsl[1],
+      l = hsl[2],
+      c = (1 - Math.abs(2*l - 1)) * s,
+      hprime = h/60,
+      x = c*(1 - Math.abs(hprime%2 - 1)),
+      m = l - c/2;
+    
+    var rgb = hprime < 1 ? [c,x,0] :
+      hprime < 2 ? [x,c,0] :
+      hprime < 3 ? [0,c,x] :
+      hprime < 4 ? [0,x,c] :
+      hprime < 5 ? [x,0,c] :
+      hprime < 6 ? [c,0,x] : [0,0,0];
+    
+    rgb[0] += m;
+    rgb[1] += m;
+    rgb[2] += m;
+    
+    rgb[0] *= 255;
+    rgb[1] *= 255;
+    rgb[2] *= 255;
+    
+    return rgb;
   };
 
   function ColorStrip(element) {
@@ -31,33 +38,19 @@
   };
 
   ColorStrip.prototype._init = function() {
-    var gradient = this.context.createLinearGradient(0, 0, this.element.width(), 0);
-    for (var i = 0, ii = colors.length; i < ii; i++) {
-      gradient.addColorStop(i/ii, colors[i]);
-    }
-    this.context.rect(0, 0, this.element.width(), this.element.height());
-    this.context.fillStyle = gradient;
-    this.context.fill();
-
-    this._saturate();
-  };
-
-  ColorStrip.prototype._saturate = function() {
     var width = this.element.width(),
       height = this.element.height();
-    pixels = this.context.getImageData(0, 0, width, height);
+    pixels = this.context.createImageData(width, height);
 
     for (var x = 0; x < width; x++) {
       for (var y = 0; y < height; y++) {
-        var i = (x + y * width) * 4;
-        var r = pixels.data[i];
-        var g = pixels.data[i+1];
-        var b = pixels.data[i+2];
-        var a = alpha(height, y);
-
-        pixels.data[i] = blend(r, 255, a);
-        pixels.data[i+1] = blend(g, 255, a);
-        pixels.data[i+2] = blend(b, 255, a);
+        var i = (x + y * width) * 4,
+          rgb = hslToRgb([x/width*300, 1, 1 - y/height]);
+        
+        pixels.data[i] = rgb[0];
+        pixels.data[i+1] = rgb[1];
+        pixels.data[i+2] = rgb[2];
+        pixels.data[i+3] = 255;
       }
     }
 
