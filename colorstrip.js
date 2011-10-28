@@ -56,8 +56,8 @@
   };
 
   ColorStrip.prototype._value = function(height, x) {
-    var max = 255;
-    return Math.round((-max/height)*x + max);
+    var color = 127*Math.sin((Math.PI/height)*(x+height/2)) + 128;
+    return Math.round(color);
   };
 
   $.fn.extend({
