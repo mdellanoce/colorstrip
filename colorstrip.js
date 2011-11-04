@@ -38,15 +38,15 @@
   };
 
   ColorStrip.prototype._init = function() {
-    var width = this.element.width(),
-      height = this.element.height();
+    var width = this._width(),
+      height = this._height(),
+      x, y, i;
     pixels = this.context.createImageData(width, height);
 
-    for (var x = 0; x < width; x++) {
-      for (var y = 0; y < height; y++) {
-        var i = (x + y * width) * 4,
-          rgb = hslToRgb([x/width*300, 1, 1 - y/height]);
-        
+    for (x = 0; x < width; x++) {
+      for (y = 0; y < height; y++) {
+        i = (x + y * width) * 4;
+        rgb = this._rgb(x, y);
         pixels.data[i] = rgb[0];
         pixels.data[i+1] = rgb[1];
         pixels.data[i+2] = rgb[2];
@@ -55,6 +55,20 @@
     }
 
     this.context.putImageData(pixels, 0, 0);
+  };
+
+  ColorStrip.prototype._rgb = function(x, y) {
+    var width = this._width(),
+      height = this._height();
+    return hslToRgb([x/width*300, 1, 1 - y/height]);
+  };
+
+  ColorStrip.prototype._width = function() {
+    return this.element.width();
+  };
+
+  ColorStrip.prototype._height = function() {
+    return this.element.height();
   };
 
   $.fn.extend({
