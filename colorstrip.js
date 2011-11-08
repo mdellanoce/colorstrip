@@ -28,6 +28,23 @@
     }
 
     this.context.putImageData(pixels, 0, 0);
+
+    this.element.bind('mousedown mousemove mouseup', $.proxy(this, '_change'));
+  };
+
+  ColorStrip.prototype._change = function(event) {
+    if (event.type === 'mousedown') {
+      this._mousedown = true;
+    } else if (event.type === 'mouseup') {
+      this._mousedown = false;
+    }
+
+    if (this._mousedown) {
+      var x = event.pageX - this.element.offset().left,
+        y = event.pageY - this.element.offset().top,
+        rgb = this._rgb(x, y);
+      this.element.trigger('colorstripchange', rgb);
+    }
   };
 
   ColorStrip.prototype._rgb = function(x, y) {
