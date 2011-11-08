@@ -1,4 +1,8 @@
 (function($) {
+  function supressSelectCursor() {
+    return false;
+  };
+
   function ColorStrip(element) {
     this.element = element;
     this._create();
@@ -30,8 +34,10 @@
     this.context.putImageData(pixels, 0, 0);
 
     this.element.bind('mousedown mousemove mouseup', $.proxy(this, '_change'));
+    
+    this.element.get(0).onselectstart = supressSelectCursor;
   };
-
+  
   ColorStrip.prototype._change = function(event) {
     if (event.type === 'mousedown') {
       this._mousedown = true;
