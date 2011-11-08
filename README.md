@@ -6,14 +6,14 @@ Colorstrip currently requires a browser that supports the canvas element.
 Put a canvas element somewhere on your page. It can be any width and height, colorstrip
 will automatically scale itself to fit the element.
 
-<pre>
-&lt;canvas width="600" height="100"&gt;&lt;/canvas&gt;
-</pre>
+```html
+<canvas width="600" height="100"></canvas>
+```
 
 Include jQuery and the colorstrip plugin on your page. Create the colorstrip in a script block.
 
-<pre>
+```javascript
 $('canvas').colorstrip().bind('colorstripchange', function(e, hex) {
   //Handle the color change event somehow...
 });
-</pre>
+```
