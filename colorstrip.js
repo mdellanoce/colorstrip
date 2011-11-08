@@ -38,7 +38,7 @@
     } else if (event.type === 'mouseup') {
       this._mousedown = false;
     }
-
+    
     if (this._mousedown) {
       var x = event.pageX - this.element.offset().left,
         y = event.pageY - this.element.offset().top,
@@ -100,7 +100,7 @@
   $.fn.extend({
     colorstrip: function() {
       var element = $(this),
-        colorStrip = new ColorStrip(element);
+        colorstrip = new ColorStrip(element);
       element.data('colorstrip', colorstrip);
       return this;
     }
