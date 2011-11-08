@@ -3,17 +3,24 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
     <style type="text/css">
-      #colorstrip {
+      #colorstrip,#color {
         border: 1px solid black;
+      }
+      #color {
+        width: 50px;
+        height: 25px;
       }
     </style>
   </head>
   <body>
     <canvas id="colorstrip" width="600" height="100"></canvas>
+    <div id="color"></div>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="colorstrip.js"></script>
     <script type="text/javascript">
-      $('#colorstrip').colorstrip();
+      $('#colorstrip').colorstrip().bind('colorstripchange', function(e, hex) {
+        $('#color').css('background-color', hex);
+      });
     </script>
   <body>
 </html>
