@@ -1,0 +1,16 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    cmdparse (2.0.3)
+    juicer (1.0.13)
+      cmdparse
+      nokogiri (>= 1.5.0)
+      rubyzip
+    nokogiri (1.5.0-java)
+    rubyzip (0.9.4)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  juicer
