@@ -1,31 +1,4 @@
 (function($) {
-  function hslToRgb(hsl) {
-    var h = hsl[0],
-      s = hsl[1],
-      l = hsl[2],
-      c = (1 - Math.abs(2*l - 1)) * s,
-      hprime = h/60,
-      x = c*(1 - Math.abs(hprime%2 - 1)),
-      m = l - c/2;
-    
-    var rgb = hprime < 1 ? [c,x,0] :
-      hprime < 2 ? [x,c,0] :
-      hprime < 3 ? [0,c,x] :
-      hprime < 4 ? [0,x,c] :
-      hprime < 5 ? [x,0,c] :
-      hprime < 6 ? [c,0,x] : [0,0,0];
-    
-    rgb[0] += m;
-    rgb[1] += m;
-    rgb[2] += m;
-    
-    rgb[0] *= 255;
-    rgb[1] *= 255;
-    rgb[2] *= 255;
-    
-    return rgb;
-  };
-
   function ColorStrip(element) {
     this.element = element;
     this._create();
@@ -59,8 +32,32 @@
 
   ColorStrip.prototype._rgb = function(x, y) {
     var width = this._width(),
-      height = this._height();
-    return hslToRgb([x/width*300, 1, 1 - y/height]);
+      height = this._height(),
+      hsl = [x/width*300, 1, 1 - y/height],
+      h = hsl[0],
+      s = hsl[1],
+      l = hsl[2],
+      c = (1 - Math.abs(2*l - 1)) * s,
+      hprime = h/60,
+      x = c*(1 - Math.abs(hprime%2 - 1)),
+      m = l - c/2;
+    
+    var rgb = hprime < 1 ? [c,x,0] :
+      hprime < 2 ? [x,c,0] :
+      hprime < 3 ? [0,c,x] :
+      hprime < 4 ? [0,x,c] :
+      hprime < 5 ? [x,0,c] :
+      hprime < 6 ? [c,0,x] : [0,0,0];
+    
+    rgb[0] += m;
+    rgb[1] += m;
+    rgb[2] += m;
+    
+    rgb[0] *= 255;
+    rgb[1] *= 255;
+    rgb[2] *= 255;
+
+    return rgb;
   };
 
   ColorStrip.prototype._width = function() {
