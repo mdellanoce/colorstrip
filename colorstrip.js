@@ -42,9 +42,21 @@
     if (this._mousedown) {
       var x = event.pageX - this.element.offset().left,
         y = event.pageY - this.element.offset().top,
-        rgb = this._rgb(x, y);
+        rgb = this._rgbToHex(this._rgb(x, y));
       this.element.trigger('colorstripchange', rgb);
     }
+  };
+
+  ColorStrip.prototype._rgbToHex = function(rgb) {
+    var key = '0123456789ABCDEF',
+      base = 16,
+      hex = '#',
+      c;
+    for (var i = 0, ii = rgb.length; i < ii; i++) {
+      c = rgb[i];
+      hex += key.charAt((c - c % base)/base) + key.charAt(c % base);
+    }
+    return hex;
   };
 
   ColorStrip.prototype._rgb = function(x, y) {
