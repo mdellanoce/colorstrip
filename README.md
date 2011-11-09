@@ -13,7 +13,7 @@ will automatically scale itself to fit the element's width and height.
 Include jQuery and the colorstrip plugin on your page. Create the colorstrip in a script block.
 
 ```javascript
-$('#color').colorstrip().bind('colorstripchange', function(e, hex) {
+$('#color').colorstrip(function(hex) {
   //Handle the color change event somehow...
 });
 ```

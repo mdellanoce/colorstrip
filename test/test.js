@@ -23,7 +23,7 @@ test('change color', function() {
   };
   
   expect(4);
-  canvas = $('canvas').colorstrip().bind('colorstripchange', function(e, hex) {
+  canvas = $('canvas').colorstrip(function(hex) {
     equal(hex, colors[i++], 'should change color');
   });
   

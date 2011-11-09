@@ -111,10 +111,17 @@
   };
 
   $.fn.extend({
-    colorstrip: function() {
+    colorstrip: function(change) {
       var element = $(this),
         colorstrip = new ColorStrip(element);
       element.data('colorstrip', colorstrip);
+
+      if ($.isFunction(change)) {
+        element.bind('colorstripchange', function(e, hex) {
+          change.call(this, hex);
+        });
+      }
+
       return this;
     }
   });

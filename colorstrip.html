@@ -23,7 +23,7 @@
     <script type="text/javascript" src="lib/jquery/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="colorstrip.js"></script>
     <script type="text/javascript">
-      $('#colorstrip').colorstrip().bind('colorstripchange', function(e, hex) {
+      $('#colorstrip').colorstrip(function(hex) {
         $('#color').css('background-color', hex);
       });
     </script>
