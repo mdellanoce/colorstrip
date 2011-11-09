@@ -9,7 +9,14 @@
   };
 
   ColorStrip.prototype._create = function() {
-    this.canvas = this.element.get(0);
+    if (this.element.is('canvas')) {
+      this.canvas = this.element.get(0);
+    } else {
+      this.canvas = $('<canvas />').attr({
+        width: this._width(),
+        height: this._height()
+      }).appendTo(this.element).get(0);
+    }
     this.context = this.canvas.getContext('2d');
     this._init();
   };
@@ -35,7 +42,7 @@
 
     this.element.bind('mousedown mousemove mouseup', $.proxy(this, '_change'));
     
-    this.element.get(0).onselectstart = supressSelectCursor;
+    this.canvas.onselectstart = supressSelectCursor;
   };
   
   ColorStrip.prototype._change = function(event) {
