@@ -42,6 +42,13 @@
 
     this.element.bind('mousedown mousemove mouseup', $.proxy(this, '_change'));
     
+    if (this.canvas.addEventListener) {
+      this.canvas.addEventListener('touchstart', $.proxy(this, '_touchevent'), false);
+      this.canvas.addEventListener('touchmove', $.proxy(this, '_touchevent'), false);
+      this.canvas.addEventListener('touchend', $.proxy(this, '_touchevent'), false);
+      this.canvas.addEventListener('touchcancel', $.proxy(this, '_touchevent'), false);
+    }
+
     this.canvas.onselectstart = supressSelectCursor;
   };
   
@@ -58,6 +65,31 @@
         rgb = this._rgbToHex(this._rgb(x, y));
       this.element.trigger('colorstripchange', rgb);
     }
+  };
+
+  ColorStrip.prototype.touchevent = function(event) {
+    var touches = event.changedTouches,
+      first = touches[0],
+      eventMap = {
+        touchstart: 'mousedown',
+        touchmove: 'mousemove',
+        touchend: 'mouseup'
+      },
+      type = eventMap[event.type];
+
+    if (!type) {
+      return;
+    }
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent(type, true, true, window, 1,
+      first.screenX, first.screenY,
+      first.clientX, first.clientY, false,
+      false, false, false, 0, null);
+
+    first.target.dispatchEvent(simulatedEvent);
+
+    event.preventDefault();
   };
 
   ColorStrip.prototype._rgbToHex = function(rgb) {
