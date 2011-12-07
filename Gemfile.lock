@@ -6,11 +6,13 @@ GEM
       cmdparse
       nokogiri (>= 1.5.0)
       rubyzip
+    nokogiri (1.5.0)
     nokogiri (1.5.0-java)
     rubyzip (0.9.4)
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   juicer

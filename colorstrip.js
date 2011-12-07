@@ -67,7 +67,7 @@
     }
   };
 
-  ColorStrip.prototype.touchevent = function(event) {
+  ColorStrip.prototype._touchevent = function(event) {
     var touches = event.changedTouches,
       first = touches[0],
       eventMap = {
