@@ -23,7 +23,7 @@ The colorstrip can also display a preview of the current color as it changes:
 ```javascript
 $('#color').colorstrip({
   preview: 'right',
-  function(hex) {
+  change: function(hex) {
     //Handle the color change event somehow...
   }
 });
