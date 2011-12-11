@@ -10,28 +10,30 @@
   };
 
   ColorStrip.prototype._create = function() {
-    if (this.element.is('canvas')) {
-      this.canvas = this.element.get(0);
+    var self = this;
+    if (self.element.is('canvas')) {
+      self.canvas = self.element.get(0);
     } else {
-      this.canvas = $('<canvas />').attr({
-        width: this._width(),
-        height: this._height()
-      }).appendTo(this.element).get(0);
+      self.canvas = $('<canvas />').attr({
+        width: self._width(),
+        height: self._height()
+      }).appendTo(self.element).get(0);
     }
-    this.context = this.canvas.getContext('2d');
-    this._init();
+    self.context = self.canvas.getContext('2d');
+    self._init();
   };
 
   ColorStrip.prototype._init = function() {
-    var width = this._width(),
-      height = this._height(),
+    var self = this,
+      width = self._width(),
+      height = self._height(),
       x, y, i,
-      pixels = this.context.createImageData(width, height);
+      pixels = self.context.createImageData(width, height);
     
     for (x = 0; x < width; x++) {
       for (y = 0; y < height; y++) {
         i = (x + y * width) * 4;
-        rgb = this._rgb(x, y, width, height);
+        rgb = self._rgb(x, y, width, height);
         pixels.data[i] = rgb[0];
         pixels.data[i+1] = rgb[1];
         pixels.data[i+2] = rgb[2];
@@ -39,35 +41,42 @@
       }
     }
     
-    this.context.putImageData(pixels, 0, 0);
+    self.context.putImageData(pixels, 0, 0);
 
-    this.element.bind('mousedown mousemove mouseup', $.proxy(this, '_change'));
+    self.element.bind({
+      'mousedown mousemove mouseup': $.proxy(self, '_change'),
+      'colorstripchange': $.proxy(self, '_preview')
+    });
     
-    if (this.canvas.addEventListener) {
-      this.canvas.addEventListener('touchstart', $.proxy(this, '_touchevent'), false);
-      this.canvas.addEventListener('touchmove', $.proxy(this, '_touchevent'), false);
-      this.canvas.addEventListener('touchend', $.proxy(this, '_touchevent'), false);
-      this.canvas.addEventListener('touchcancel', $.proxy(this, '_touchevent'), false);
+    if (self.canvas.addEventListener) {
+      self.canvas.addEventListener('touchstart', $.proxy(self, '_touchevent'), false);
+      self.canvas.addEventListener('touchmove', $.proxy(self, '_touchevent'), false);
+      self.canvas.addEventListener('touchend', $.proxy(self, '_touchevent'), false);
+      self.canvas.addEventListener('touchcancel', $.proxy(self, '_touchevent'), false);
     }
 
-    this.canvas.onselectstart = supressSelectCursor;
+    self.canvas.onselectstart = supressSelectCursor;
   };
   
+  ColorStrip.prototype._preview = function(event, hex) {
+  }
+
   ColorStrip.prototype._change = function(event) {
+    var self = this, x, y, rgb;
     if (event.type === 'mousedown') {
-      this._mousedown = true;
+      self._mousedown = true;
     } else if (event.type === 'mouseup') {
-      this._mousedown = false;
+      self._mousedown = false;
     }
     
-    if (this._mousedown) {
-      var x = event.pageX - this.element.offset().left,
-        y = event.pageY - this.element.offset().top,
-        rgb = this._rgbToHex(this._rgb(x, y));
-      this.element.trigger('colorstripchange', rgb);
+    if (self._mousedown) {
+      x = event.pageX - self.element.offset().left;
+      y = event.pageY - self.element.offset().top;
+      rgb = self._rgbToHex(self._rgb(x, y));
+      self.element.trigger('colorstripchange', rgb);
 
-      if (this.options.change) {
-        this.options.change.call(this.element, rgb);
+      if (self.options.change) {
+        self.options.change.call(self.element, rgb);
       }
     }
   };
