@@ -6,6 +6,7 @@
   function ColorStrip(element, options) {
     this.element = element;
     this.options = options;
+    this.previewWidth = options.preview === 'right' ? 50 : 0;
     this._create();
   };
 
@@ -15,8 +16,8 @@
       self.canvas = self.element.get(0);
     } else {
       self.canvas = $('<canvas />').attr({
-        width: self._width(),
-        height: self._height()
+        width: self.element.width(),
+        height: self.element.height()
       }).appendTo(self.element).get(0);
     }
     self.context = self.canvas.getContext('2d');
@@ -27,12 +28,13 @@
     var self = this,
       width = self._width(),
       height = self._height(),
+      canvasWidth = self.element.width(),
       x, y, i,
-      pixels = self.context.createImageData(width, height);
-    
+      pixels = self.context.createImageData(canvasWidth, height);
+
     for (x = 0; x < width; x++) {
       for (y = 0; y < height; y++) {
-        i = (x + y * width) * 4;
+        i = (x + y * canvasWidth) * 4;
         rgb = self._rgb(x, y, width, height);
         pixels.data[i] = rgb[0];
         pixels.data[i+1] = rgb[1];
@@ -56,9 +58,15 @@
     }
 
     self.canvas.onselectstart = supressSelectCursor;
+    self._preview(0, '#000');
   };
   
   ColorStrip.prototype._preview = function(event, hex) {
+    var self = this,
+      border = 5;
+    self.context.rect(self._width() + border, 0, self.previewWidth - border, self._height());
+    self.context.fillStyle = hex;
+    self.context.fill();
   }
 
   ColorStrip.prototype._change = function(event) {
@@ -149,7 +157,7 @@
   };
 
   ColorStrip.prototype._width = function() {
-    return this.element.width();
+    return this.element.width() - this.previewWidth;
   };
 
   ColorStrip.prototype._height = function() {

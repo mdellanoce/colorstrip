@@ -3,14 +3,13 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
     <style type="text/css">
-      #color {
-        border: 1px solid black;
-      }
       #colorstrip {
         width: 600px;
         height: 100px;
       }
       #color {
+        margin-top: 10px;
+        border: 1px solid black;
         width: 50px;
         height: 25px;
       }
@@ -23,8 +22,11 @@
     <script type="text/javascript" src="lib/jquery/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="colorstrip.js"></script>
     <script type="text/javascript">
-      $('#colorstrip').colorstrip(function(hex) {
-        $('#color').css('background-color', hex);
+      $('#colorstrip').colorstrip({
+        preview: 'right',
+        change: function(hex) {
+          $('#color').css('background-color', hex);
+        }
       });
     </script>
   <body>
