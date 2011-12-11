@@ -3,8 +3,9 @@
     return false;
   };
 
-  function ColorStrip(element) {
+  function ColorStrip(element, options) {
     this.element = element;
+    this.options = options;
     this._create();
   };
 
@@ -64,6 +65,10 @@
         y = event.pageY - this.element.offset().top,
         rgb = this._rgbToHex(this._rgb(x, y));
       this.element.trigger('colorstripchange', rgb);
+
+      if (this.options.change) {
+        this.options.change.call(this.element, rgb);
+      }
     }
   };
 
@@ -143,16 +148,12 @@
   };
 
   $.fn.extend({
-    colorstrip: function(change) {
+    colorstrip: function(options) {
       var element = $(this),
-        colorstrip = new ColorStrip(element);
-      element.data('colorstrip', colorstrip);
+        opt = $.isFunction(options) ? { change: options } : options,
+        colorstrip = new ColorStrip(element, opt);
 
-      if ($.isFunction(change)) {
-        element.bind('colorstripchange', function(e, hex) {
-          change.call(this, hex);
-        });
-      }
+      element.data('colorstrip', colorstrip);
 
       return this;
     }
